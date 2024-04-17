@@ -62,7 +62,7 @@ public class Shipment {
     }
     public String shortString(){
         //A shorter String of the shipment
-        return "%s: %s".formatted(this.fruit.getFruitTitle(), this.deliveryDate);
+        return "%s [%d]: %s".formatted(this.fruit.getFruitTitle(), this.quantity, this.deliveryDate);
     }
     public String toString(){
         return "Shipment #%d\n%s [%d]: $%f\nDelivered on %s".formatted(this.id, this.fruit.getFruitTitle(), this.quantity, this.totalPrice, this.deliveryDate);

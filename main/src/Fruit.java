@@ -27,11 +27,11 @@ public class Fruit {
         this.pricePerUnit = pricePerUnit;
         this.shipmentID = shipmentID;
     }
-    public boolean compareByPrice(Fruit fruit){
+    public boolean hasGreaterPrice(Fruit fruit){
         // Returns true if this.pricePerUnit is greater than the parameters pricePerUnit.
         return (this.pricePerUnit > fruit.pricePerUnit);
     }
-    public boolean compareByShelfLife(Fruit fruit){
+    public boolean hasGreaterShelfLife(Fruit fruit){
         // Returns true if this.shelfLife is greater than the parameters shelfLife.
         return (this.shelfLife > fruit.shelfLife);
     }
@@ -42,6 +42,15 @@ public class Fruit {
             str += "\nshipmentID: %d".formatted(this.shipmentID);
         }
         return str;
+    }
+
+    public boolean equals(Fruit fruit) {
+        if ( (this.species.equals(fruit.getSpecies())) &&
+                (this.cultivar.equals(fruit.getCultivar())) &&
+                (this.pricePerUnit == fruit.getPricePerUnit())){
+            return true;
+        }
+        return false;
     }
 
     public String getFruitTitle(){

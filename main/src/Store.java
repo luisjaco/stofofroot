@@ -13,7 +13,9 @@ import java.util.*;
  *     <p>FruitBT fruitTree - a list of all available fruit options offered at the store, in Binary Tree form</p>
  *     <p>LinkedList(Shipment) shipments - a list of all shipments made to date.</p>
  *     <p>Queue(Shipment) currentShipments - a queue of all shipments which are currently still in inventory.</p>
+ *     <p>int shipmentID - current id which shipments will use.</p>
  *     <p>Stack(Purchase) purchase - a stack of all purchases made.</p>
+ *     <p>int purchaseID - current id which purchases will use.</p>
  *     <p>HashTable(Fruit,ArrayList(Fruit)) inventory - an inventory system keeping track of all current fruit, categorized by fruit type.</p>
  */
 public class Store {
@@ -22,9 +24,10 @@ public class Store {
     private FruitBT fruitTree;
     private LinkedList<Shipment> shipments;
     private Queue<Shipment> currentShipments;
-    private Stack<Purchase> purchases;
-    private Hashtable<Fruit, ArrayList<Fruit>> inventory;
     private int shipmentID;
+    private Stack<Purchase> purchases;
+    private int purchaseID;
+    private Hashtable<Fruit, ArrayList<Fruit>> inventory;
 
     /**
      * Creates a new Store with empty data structures.
@@ -40,6 +43,7 @@ public class Store {
         this.shipmentID = 0;
         this.currentShipments = new LinkedList<>();
         this.purchases = new Stack<>();
+        this.purchaseID = 0;
         this.inventory = new Hashtable<>();
     }
 
@@ -54,7 +58,7 @@ public class Store {
     }
 
     /**
-     * Adds a Shipment to shipments and currentShipments, and populates inventory with the corresponding fruits.
+     * Adds a Shipment to shipments and currentShipments, populates inventory with the corresponding fruits, and increments shipmentID by 1.
      * @param shipment Shipment to be added.
      */
     public void addShipment(Shipment shipment){
@@ -65,6 +69,7 @@ public class Store {
         ArrayList<Fruit> fruitInventory = this.inventory.get(shipmentFruit);
         ArrayList<Fruit> fruits = shipment.getShipmentInventory();
         fruitInventory.addAll(fruits);
+        this.shipmentID++;
     }
 
     /**
@@ -92,6 +97,7 @@ public class Store {
         if (hasEnoughInventory(fruit, quantity)){
             this.purchases.add(purchase);
             discardFruit(fruit, quantity);
+            this.purchaseID++;
         }
     }
 
@@ -336,6 +342,22 @@ public class Store {
 
     public void setShipmentID(int shipmentID) {
         this.shipmentID = shipmentID;
+    }
+
+    public FruitBT getFruitTree() {
+        return fruitTree;
+    }
+
+    public void setFruitTree(FruitBT fruitTree) {
+        this.fruitTree = fruitTree;
+    }
+
+    public int getPurchaseID() {
+        return purchaseID;
+    }
+
+    public void setPurchaseID(int purchaseID) {
+        this.purchaseID = purchaseID;
     }
 }
 

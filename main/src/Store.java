@@ -14,7 +14,8 @@ import java.util.*;
  *     <p>LinkedList(Shipment) shipments - a list of all shipments made to date.</p>
  *     <p>Queue(Shipment) currentShipments - a queue of all shipments which are currently still in inventory.</p>
  *     <p>int shipmentID - current id which shipments will use.</p>
- *     <p>Stack(Purchase) purchase - a stack of all purchases made.</p>
+ *     <p>Stack(Purchase) purchaseStack - a stack of all purchases made.</p>
+ *     <p>ArrayList(Purchase) purchaseHistory - a list of all purchases made to date.</p>
  *     <p>int purchaseID - current id which purchases will use.</p>
  *     <p>HashTable(Fruit,ArrayList(Fruit)) inventory - an inventory system keeping track of all current fruit, categorized by fruit type.</p>
  */
@@ -25,7 +26,8 @@ public class Store {
     private LinkedList<Shipment> shipments;
     private Queue<Shipment> currentShipments;
     private int shipmentID;
-    private Stack<Purchase> purchases;
+    private Stack<Purchase> purchaseStack;
+    private ArrayList<Purchase> purchaseHistory;
     private int purchaseID;
     private Hashtable<Fruit, ArrayList<Fruit>> inventory;
 
@@ -42,7 +44,8 @@ public class Store {
         this.shipments = new LinkedList<>();
         this.shipmentID = 0;
         this.currentShipments = new LinkedList<>();
-        this.purchases = new Stack<>();
+        this.purchaseStack = new Stack<>();
+        this.purchaseHistory = new ArrayList<>();
         this.purchaseID = 0;
         this.inventory = new Hashtable<>();
     }
@@ -95,7 +98,8 @@ public class Store {
         Fruit fruit = purchase.getFruit();
         int quantity = purchase.getQuantity();
         if (hasEnoughInventory(fruit, quantity)){
-            this.purchases.add(purchase);
+            this.purchaseStack.add(purchase);
+            this.purchaseHistory.add(purchase);
             discardFruit(fruit, quantity);
             this.purchaseID++;
         }
@@ -117,68 +121,52 @@ public class Store {
     }
 
     /**
-     * Discards (removes) fruit based on shipment, will remove all fruits with a corresponding shipmentID.
-     * @param shipment shipment of fruit to discard.
+     * Creates a sorted ArrayList of Fruit's based on fruitOptions, sorted by price increasingly.
+     * @return sorted ArrayList of Fruit's, in increasing order.
      */
-    public void discardFruit(Shipment shipment){
-        Fruit fruit = shipment.getFruit();
-        int shipmentID = shipment.getId();
-        ArrayList<Fruit> fruits = this.inventory.get(fruit);
-        for (Fruit f: fruits){
-            if (f.getShipmentID() == shipmentID){
-                fruits.remove(f);
-            }
-        }
+    public ArrayList<Fruit> fruitOptionsSortedByPrice(){
+        return sortByPrice(this.fruitOptions);
     }
 
-    /**
-     * Sorts a list by price (increasing) using a MergeSort.
-     * @param fruits A list of fruits to be sorted.
-     * @return A sorted list of fruitOptions, in increasing order.
-     */
-    static public Fruit[] sortedByPrice(Fruit[] fruits){
-        if (fruits.length <= 1){
+    private ArrayList<Fruit> sortByPrice(ArrayList<Fruit> fruits){
+        //Edge case.
+        if (fruits.size() <= 1){
             return fruits;
         }
+        ArrayList<Fruit> sorted = new ArrayList<>();
 
-        Fruit[] sorted = new Fruit[fruits.length];
+        //Array splicing.
+        int middle = (int) (fruits.size() / 2);
+        ArrayList<Fruit> left = new ArrayList<>(fruits.subList(0, middle));
+        ArrayList<Fruit> right = new ArrayList<>(fruits.subList(middle, fruits.size()));
 
-        int middle = (int) (fruits.length / 2);
-        Fruit[] left = Arrays.copyOfRange(fruits, 0, middle);
-        Fruit[] right = Arrays.copyOfRange(fruits, middle, fruits.length);
-
-        left = sortedByPrice(left);
-        right = sortedByPrice(right);
-
-        int i = 0;
-        int j = 0;
-        int index = 0;
+        // Recursive call.
+        left = sortByPrice(left);
+        right = sortByPrice(right);
 
         //Initial merge
-        while ( (i < left.length) && (j < right.length)){
-            Fruit leftFruit = left[i];
-            Fruit rightFruit = right[j];
+        int i = 0;
+        int j = 0;
+        while ( (i < left.size()) && (j < right.size())){
+            Fruit leftFruit = left.get(i);
+            Fruit rightFruit = right.get(j);
             if (leftFruit.hasGreaterPrice(rightFruit)) {
-                sorted[index] = rightFruit;
-                index++;
+                sorted.add(rightFruit);
                 j++;
             }
             else{
-                sorted[index] = leftFruit;
-                index++;
+                sorted.add(leftFruit);
                 i++;
             }
         }
 
         //Cleanup merges
-        while (i < left.length){
-            sorted[index] = left[i];
-            index++;
+        while (i < left.size()) {
+            sorted.add(left.get(i));
             i++;
         }
-        while (j < right.length){
-            sorted[index] = right[i];
-            index++;
+        while (j < right.size()){
+            sorted.add(right.get(j));
             j++;
         }
 
@@ -186,52 +174,52 @@ public class Store {
     }
 
     /**
-     * Sorts a list by shelf life (decreasing) using a MergeSort.
-     * @param fruits A list of fruits to be sorted.
-     * @return A sorted list of fruitOptions, in decreasing order.
+     * Creates a sorted ArrayList of Fruit's based on fruitOptions, sorted by shelfLife increasingly.
+     * @return sorted ArrayList of Fruit's, in increasing order.
      */
-    static public Fruit[] sortedByShelfLife(Fruit[] fruits) {
-        if (fruits.length <= 1) {
+    public ArrayList<Fruit> fruitOptionsSortedByShelfLife(){
+        return sortByShelfLife(this.fruitOptions);
+    }
+
+    private ArrayList<Fruit> sortByShelfLife(ArrayList<Fruit> fruits){
+        //Edge case.
+        if (fruits.size() <= 1){
             return fruits;
         }
+        ArrayList<Fruit> sorted = new ArrayList<>();
 
-        Fruit[] sorted = new Fruit[fruits.length];
+        //Array splicing.
+        int middle = (int) (fruits.size() / 2);
+        ArrayList<Fruit> left = new ArrayList<>(fruits.subList(0, middle));
+        ArrayList<Fruit> right = new ArrayList<>(fruits.subList(middle, fruits.size()));
 
-        int middle = (int) (fruits.length / 2);
-        Fruit[] left = Arrays.copyOfRange(fruits, 0, middle);
-        Fruit[] right = Arrays.copyOfRange(fruits, middle, fruits.length);
-
-        left = sortedByShelfLife(left);
-        right = sortedByShelfLife(right);
-
-        int i = 0;
-        int j = 0;
-        int index = 0;
+        // Recursive call.
+        left = sortByShelfLife(left);
+        right = sortByShelfLife(right);
 
         //Initial merge
-        while ((i < left.length) && (j < right.length)) {
-            Fruit leftFruit = left[i];
-            Fruit rightFruit = right[j];
+        int i = 0;
+        int j = 0;
+        while ( (i < left.size()) && (j < right.size())){
+            Fruit leftFruit = left.get(i);
+            Fruit rightFruit = right.get(j);
             if (leftFruit.hasGreaterShelfLife(rightFruit)) {
-                sorted[index] = leftFruit;
-                index++;
-                i++;
-            } else {
-                sorted[index] = rightFruit;
-                index++;
+                sorted.add(rightFruit);
                 j++;
+            }
+            else{
+                sorted.add(leftFruit);
+                i++;
             }
         }
 
         //Cleanup merges
-        while (i < left.length){
-            sorted[index] = left[i];
-            index++;
+        while (i < left.size()) {
+            sorted.add(left.get(i));
             i++;
         }
-        while (j < right.length){
-            sorted[index] = right[i];
-            index++;
+        while (j < right.size()){
+            sorted.add(right.get(j));
             j++;
         }
 
@@ -246,15 +234,38 @@ public class Store {
     public boolean containsFruitOption(Fruit fruit){
         return this.fruitTree.search(fruit);
     }
-
     public Shipment peekOldestShipment(){
         return this.currentShipments.peek();
     }
-    public Shipment pollOldestShipment(){
-        return this.currentShipments.poll();
+
+    /**
+     * Handles discarding the oldest shipment, and removes corresponding fruit from the inventory.
+     * @return number of fruit from corresponding shipment that were removed from the inventory.
+     */
+    public int discardOldestShipment(){
+        Shipment shipment = this.currentShipments.poll();
+        int removed = 0;
+        if (shipment != null) {
+            Fruit fruit = shipment.getFruit();
+            int shipmentID = shipment.getId();
+            ArrayList<Fruit> fruits = this.inventory.get(fruit);
+            int index = 0;
+            while (index < fruits.size()){
+                Fruit f = fruits.get(index);
+                if (f.getShipmentID() == shipmentID){
+                    fruits.remove(f);
+                    removed++;
+                }
+                else {
+                    index++;
+                }
+            }
+        }
+        return removed;
     }
+
     public Purchase peekMostRecentPurchase(){
-        return this.purchases.peek();
+        return this.purchaseStack.peek();
     }
 
     /**
@@ -263,22 +274,21 @@ public class Store {
     public void displayFruitOptions(){
         System.out.println("~~~~" + name + "'s current fruit options~~~~");
         for (Fruit fruit : this.fruitOptions){
-            System.out.print(fruit + "\n~");
+            System.out.println(fruit + "\n~");
         }
     }
 
     /**
-     * Displays the current fruit options based on a specific species.
+     * Displays all current fruit with their available quantities.
      */
-    public void displayFruitOptions(String species){
-        System.out.println("~~~~" + name + "'s current " + species + " options~~~~");
-        for (Fruit fruit : this.fruitOptions){
-            if (fruit.getSpecies().equals(species)){
-                System.out.print(fruit + "\n~");
-            }
+    public void displayInventory(){
+        System.out.println("~~~~ Current inventory of " + name +"~~~~");
+        for( Fruit key: this.inventory.keySet()){
+            String fruitTitle = key.getFruitTitle();
+            int size = this.inventory.get(key).size();
+            System.out.println("%s: [%d]".formatted(fruitTitle, size));
         }
     }
-
     /**
      * Displays all previous shipments.
      */
@@ -286,6 +296,16 @@ public class Store {
         System.out.println("~~~~ Shipment history for " + name +"~~~~");
         for (Shipment shipment : this.shipments){
             System.out.println(shipment.shortString() + "\n~");
+        }
+    }
+
+    /**
+     * Displays all purchases.
+     */
+    public void displayPurchases(){
+        System.out.println("~~~~" + name + "'s purchase history~~~~");
+        for (Purchase purchase: this.purchaseHistory){
+            System.out.println(purchase + "\n~");
         }
     }
     public String getName() {
@@ -308,10 +328,6 @@ public class Store {
         return currentShipments;
     }
 
-    public Stack<Purchase> getPurchases() {
-        return purchases;
-    }
-
     public Hashtable<Fruit, ArrayList<Fruit>> getInventory() {
         return inventory;
     }
@@ -326,10 +342,6 @@ public class Store {
 
     public void setCurrentShipments(Queue<Shipment> currentShipments) {
         this.currentShipments = currentShipments;
-    }
-
-    public void setPurchases(Stack<Purchase> purchases) {
-        this.purchases = purchases;
     }
 
     public void setInventory(Hashtable<Fruit, ArrayList<Fruit>> inventory) {

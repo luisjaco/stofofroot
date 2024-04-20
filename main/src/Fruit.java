@@ -45,12 +45,7 @@ public class Fruit {
     }
 
     public boolean equals(Fruit fruit) {
-        if ( (this.species.equals(fruit.getSpecies())) &&
-                (this.cultivar.equals(fruit.getCultivar())) &&
-                (this.pricePerUnit == fruit.getPricePerUnit())){
-            return true;
-        }
-        return false;
+        return ( (this.species.equals(fruit.getSpecies()) ) && ( this.cultivar.equals(fruit.getCultivar()) ) );
     }
 
     public String getFruitTitle(){

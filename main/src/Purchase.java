@@ -19,6 +19,24 @@ public class Purchase {
     public String toString(){
         return "%s [%d]; $%f".formatted(this.fruit.getFruitTitle(), this.quantity, this.price);
     }
+
+    /**
+     * Compares price.
+     * @param purchase Purchase to be compared to.
+     * @return true if this Purchase has a greater price variable than the parameter.
+     */
+    public boolean isPriceGreaterThan(Purchase purchase){
+        return this.price > purchase.getPrice();
+    }
+
+    /**
+     * Compares quantity.
+     * @param purchase Purchase to be compared to.
+     * @return true if this Purchase has a greater quantity variable than the parameter.
+     */
+    public boolean isQuantityGreaterThan(Purchase purchase){
+        return this.quantity > purchase.getQuantity();
+    }
     public int getId() {
         return id;
     }

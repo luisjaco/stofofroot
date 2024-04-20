@@ -65,7 +65,7 @@ public class Shipment {
         return "%s [%d]: %s".formatted(this.fruit.getFruitTitle(), this.quantity, this.deliveryDate);
     }
     public String toString(){
-        return "Shipment #%d\n%s [%d]: $%f\nDelivered on %s".formatted(this.id, this.fruit.getFruitTitle(), this.quantity, this.totalPrice, this.deliveryDate);
+        return "Shipment #%d\n%s [%d]: $%f\nDelivered on %s\n[Shelf life: %d days]".formatted(this.id, this.fruit.getFruitTitle(), this.quantity, this.totalPrice, this.deliveryDate, this.fruit.getShelfLife());
     }
     public Fruit getFruit() {
         return fruit;

@@ -234,6 +234,22 @@ public class Store {
     public boolean containsFruitOption(Fruit fruit){
         return this.fruitTree.search(fruit);
     }
+
+    /**
+     * Returns a Fruit which has the corresponding species and cultivar, from fruitOptions.
+     * @param species species of Fruit
+     * @param cultivar cultivar of Fruit
+     * @return Fruit with corresponding species and cultivar, null if specified species and cultivar are not present in fruitOptions.
+     */
+    public Fruit findFruitOption(String species, String cultivar){
+        String fruitTitle = cultivar + " " + species;
+        for (Fruit fruit : this.fruitOptions){
+            if (fruit.getFruitTitle().equals(fruitTitle)){
+                return fruit;
+            }
+        }
+        return null;
+    }
     public Shipment peekOldestShipment(){
         return this.currentShipments.peek();
     }

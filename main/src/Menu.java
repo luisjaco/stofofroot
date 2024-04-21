@@ -21,23 +21,25 @@ public class Menu {
      * Initializes a new Menu class.
      */
     public Menu(){
-        this.input = new Scanner(System.in);
+        //Does nothing.
     }
     /**
      * Initial store setup.
      */
     public void start(){
+        this.input = new Scanner(System.in);
         System.out.println(stofofroot);
         System.out.print("""
                 Welcome to stofofroot [storage for fruits]! Please select an option below:
-                [1] Create new store.
-                [0] Load demo.
+                [2] Create new store
+                [1] Load demo
+                [0] Exit
                 
                 input:""");
-        int choice = collectInt(0, 1);
+        int choice = collectInt(0, 2);
 
         switch (choice){
-            case 1:
+            case 2:
                 System.out.print("""
                 Please enter the name for the store...
                 
@@ -45,27 +47,39 @@ public class Menu {
                 String storeName = collectString();
                 this.store = new Store(storeName);
                 break;
-            case 0:
+            case 1:
                 System.out.println("Loading demo store...");
                 initializeDemo();
                 System.out.println("Loaded demo! Includes: [21] fruit options, [5] shipments, and [4] purchases.");
                 break;
+            case 0:
+                exit();
+                return;
             default:
                 break;
         }
+        // In every case but 0, we will perform run()
+        run();
     }
 
     /**
      * Program loop.
      */
-    public void run(){
+    private void run(){
         while (mainMenu()){
             //Runs as long as mainMenu is returning true. (until user exits.)
             System.out.println();
         }
+        exit();
+    }
 
+    /**
+     * Exit sequence.
+     */
+    private void exit(){
         System.out.println(stofofroot);
         System.out.println("Thank you for using stofofroot! Have a great day :)");
+        this.input.close();
     }
 
     /**
@@ -145,6 +159,37 @@ public class Menu {
             }
             catch (Exception e){
                 System.out.print("ERROR! Please input an integer:\n\nNew attempt:");
+                this.input.nextLine();
+                continue;
+            }
+
+            if ((result > maxNum) || (result < minNum)){
+                System.out.print("ERROR! Please input a valid number.\n\nNew attempt:");
+            }
+            else {
+                System.out.println();
+                return result;
+            }
+        }
+    }
+
+    /**
+     * Collects a valid input double from the user. Verifies the double is within a specified range.
+     * @param minNum Minimum double a user can use.
+     * @param maxNum Maximum double a use can use.
+     * @return Valid double input.
+     */
+    private double collectDouble(double minNum, double maxNum){
+        double result;
+        while (true){
+
+            try{
+                result = this.input.nextDouble();
+                this.input.nextLine();
+            }
+            catch (Exception e){
+                System.out.print("ERROR! Please input a double:\n\nNew attempt:");
+                this.input.nextLine();
                 continue;
             }
 
@@ -171,7 +216,7 @@ public class Menu {
                 return result;
             }
             catch (Exception e){
-                System.out.print("ERROR! Please input a valid word.\n\nNew attempt:");
+                System.out.println("ERROR! Please input a valid word.\n\nNew attempt:");
             }
         }
     }
@@ -193,7 +238,7 @@ public class Menu {
                 viewMenu();
                 break;
             case 1:
-                //TODO addMenu();
+                addMenu();
                 break;
             case 0:
                 // Returns false to end the run() loop.
@@ -207,7 +252,7 @@ public class Menu {
     /**
      * Menu screen for viewing store components.
      */
-    public void viewMenu(){
+    private void viewMenu(){
         System.out.print("""
                 ~View~
                 Please select from the following options:
@@ -289,7 +334,7 @@ public class Menu {
     private void searchForFruit(){
         System.out.print("Fruit species: (Ex: Apple)\n\ninput:");
         String species = collectString();
-        System.out.print("\nFruit cultivar: (Ex: Granny Smith)\n\ninput:");
+        System.out.print("Fruit cultivar: (Ex: Granny Smith)\n\ninput:");
         String cultivar = collectString();
         Fruit testFruit = new Fruit(species, cultivar, 0, 0.0);
         System.out.println("Searching for %s %s...".formatted(cultivar, species));
@@ -370,5 +415,129 @@ public class Menu {
             default:
                 break;
         }
+    }
+    private void addMenu(){
+        System.out.print("""
+                ~Add~
+                Please select one of the following actions:
+                [3] Add fruit option
+                [2] Add shipment
+                [1] Add purchase
+                [0] Exit
+                
+                input:""");
+        int choice = collectInt(0, 3);
+        switch (choice){
+            case 3:
+                addFruitOption();
+                break;
+            case 2:
+                addShipment();
+                break;
+            case 1:
+                addPurchase();
+                break;
+            case 0:
+                break;
+            default:
+                break;
+        }
+    }
+    private Fruit findFruit(){
+        while (true){
+            System.out.print("Fruit species: (Ex: Apple)\n\ninput:");
+            String species = collectString();
+            System.out.print("Fruit cultivar: (Ex: Granny Smith)\n\ninput:");
+            String cultivar = collectString();
+            System.out.println("Searching for %s %s...".formatted(cultivar, species));
+            Fruit fruit = this.store.findFruitOption(species, cultivar);
+
+            if (fruit == null){
+                System.out.print("""
+                ERROR: Fruit not found. Try again?
+                Please select one of the following actions:
+                [1] yes
+                [0] no
+                
+                input:""");
+                int choice = collectInt(0, 1);
+                switch (choice){
+                    case 1:
+                        break;
+                    case 0:
+                        return null;
+                    default:
+                        break;
+                }
+            }
+            else {
+                return fruit;
+            }
+        }
+    }
+    private void addFruitOption(){
+        System.out.println("~Add fruit option~");
+        System.out.print("Fruit species (Ex: Apple)\n\ninput:");
+        String species = collectString();
+        System.out.print("Fruit cultivar (Ex: Granny Smith)\n\ninput:");
+        String cultivar = collectString();
+        System.out.print("Fruit shelf life (in # days)\n\ninput:");
+        int shelfLife = collectInt(1, Integer.MAX_VALUE);
+        System.out.print("Fruit price per unit\n\ninput:");
+        double pricePerUnit = collectDouble(0, Double.MAX_VALUE);
+
+        Fruit fruit = new Fruit(species, cultivar, shelfLife, pricePerUnit);
+        System.out.print("""
+                New fruit created:
+                ~
+                %s
+                ~
+                Add to fruit options?
+                Please select one of the following actions:
+                [1] yes
+                [0] no
+                
+                input:""".formatted(fruit));
+        int choice = collectInt(0, 1);
+        switch (choice){
+            case 1:
+                this.store.addFruitOption(fruit);
+                System.out.println("Fruit added to fruit options!");
+                break;
+            case 0:
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void addShipment(){
+        Fruit fruit;
+        int quantity;
+        Date deliveryDate;
+        System.out.println("~Add shipment~");
+        System.out.println("First, search for the fruit to be shipped.");
+        fruit = findFruit();
+        if (fruit != null){
+            System.out.println("Fruit found.");
+            System.out.print("Quantity of %s\n\ninput:".formatted(fruit.getFruitTitle()));
+            quantity = collectInt(1, Integer.MAX_VALUE);
+            System.out.print("Year of shipment\n\ninput:");
+            int year = collectInt(0, Integer.MAX_VALUE);
+            System.out.print("Month of shipment (Ex: 1-January, 12-December)\n\ninput:");
+            int month = collectInt(1, 12) - 1; //The Date object uses a 0-indexed month parameter.
+            System.out.print("Day of shipment\n\ninput:");
+            int day = collectInt(1, 31);
+            deliveryDate = new Date(year, month, day);
+
+            Shipment shipment = new Shipment(this.store.getShipmentID(), fruit, quantity, deliveryDate);
+
+            //TODO
+        }
+    }
+
+    private void addPurchase(){
+
     }
 }

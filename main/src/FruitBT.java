@@ -1,3 +1,6 @@
+/**
+ * FruitBT is a binary tree which contains Fruit for easy lookup of Fruits.
+ */
 public class FruitBT
 {
     private BTNode root;

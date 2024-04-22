@@ -1,12 +1,10 @@
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**
- *     <p>The Store class includes all information regarding a stores fruits options, shipments,
- *     purchases, and inventory.
+ *     <p>The Store class includes all information regarding a stores fruits options, shipments, purchases, and inventory.</p>
  *     <p></p>
- *     Initialization parameters:
- *     <p>String name: name of store.</p>
+ *     <p>Initialization parameters:</p>
+ *     <p>String name - name of store.</p>
  *     <p></p>
  *     <p>Variables:</p>
  *     <p>ArrayList(Fruit) fruitOptions - a list of all available fruit options offered at the store.</p>
@@ -21,15 +19,15 @@ import java.util.*;
  */
 public class Store {
     private String name;
-    private ArrayList<Fruit> fruitOptions;
-    private FruitBT fruitTree;
-    private LinkedList<Shipment> shipments;
-    private Queue<Shipment> currentShipments;
     private int shipmentID;
-    private Stack<Purchase> purchaseStack;
-    private ArrayList<Purchase> purchaseHistory;
     private int purchaseID;
-    private Hashtable<Fruit, ArrayList<Fruit>> inventory;
+    private final ArrayList<Fruit> fruitOptions;
+    private final FruitBT fruitTree;
+    private final LinkedList<Shipment> shipments;
+    private final Queue<Shipment> currentShipments;
+    private final Stack<Purchase> purchaseStack;
+    private final ArrayList<Purchase> purchaseHistory;
+    private final Hashtable<Fruit, ArrayList<Fruit>> inventory;
 
     /**
      * Creates a new Store with empty data structures.
@@ -93,8 +91,9 @@ public class Store {
     /**
      * Adds a Purchase to purchases, and removes the specified amount of fruit from inventory.
      * Does nothing if there is not enough inventory.
+     * @return true if purchase could be added (enough inventory for quantity), false otherwise.
      */
-    public void addPurchase(Purchase purchase){
+    public boolean addPurchase(Purchase purchase){
         Fruit fruit = purchase.getFruit();
         int quantity = purchase.getQuantity();
         if (hasEnoughInventory(fruit, quantity)){
@@ -102,6 +101,10 @@ public class Store {
             this.purchaseHistory.add(purchase);
             discardFruit(fruit, quantity);
             this.purchaseID++;
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
@@ -302,9 +305,10 @@ public class Store {
         for( Fruit key: this.inventory.keySet()){
             String fruitTitle = key.getFruitTitle();
             int size = this.inventory.get(key).size();
-            System.out.println("%s: [%d]".formatted(fruitTitle, size));
+            System.out.printf("%s: [%d]", fruitTitle, size);
         }
     }
+
     /**
      * Displays all previous shipments.
      */
@@ -348,22 +352,6 @@ public class Store {
         return inventory;
     }
 
-    public void setFruitOptions(ArrayList<Fruit> fruitOptions) {
-        this.fruitOptions = fruitOptions;
-    }
-
-    public void setShipments(LinkedList<Shipment> shipments) {
-        this.shipments = shipments;
-    }
-
-    public void setCurrentShipments(Queue<Shipment> currentShipments) {
-        this.currentShipments = currentShipments;
-    }
-
-    public void setInventory(Hashtable<Fruit, ArrayList<Fruit>> inventory) {
-        this.inventory = inventory;
-    }
-
     public int getShipmentID() {
         return shipmentID;
     }
@@ -372,20 +360,24 @@ public class Store {
         this.shipmentID = shipmentID;
     }
 
-    public FruitBT getFruitTree() {
-        return fruitTree;
-    }
-
-    public void setFruitTree(FruitBT fruitTree) {
-        this.fruitTree = fruitTree;
-    }
-
     public int getPurchaseID() {
         return purchaseID;
     }
 
     public void setPurchaseID(int purchaseID) {
         this.purchaseID = purchaseID;
+    }
+
+    public FruitBT getFruitTree() {
+        return fruitTree;
+    }
+
+    public Stack<Purchase> getPurchaseStack() {
+        return purchaseStack;
+    }
+
+    public ArrayList<Purchase> getPurchaseHistory() {
+        return purchaseHistory;
     }
 }
 

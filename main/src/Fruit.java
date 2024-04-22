@@ -1,14 +1,14 @@
+/**
+ * <p>The Fruit class is a class which contains many different characteristics of fruit.</p>
+ * <p></p>
+ * <p>Initialization parameters:</p>
+ * <p>int id - (optional) id of the shipment fruit belongs to, if applicable.</p>
+ * <p>String species - species of fruit (apple, or banana).</p>
+ * <p>String cultivar - cultivated variety of fruit (Granny Smith (apple) or Lakatan (banana).</p>
+ * <p>int shelfLife - shelf life of fruit in days.</p>
+ * <p>double pricePerUnit: price per unit of fruit.</p>
+ */
 public class Fruit {
-    /*
-    The Fruit class is a class which contains many different characteristics of fruit.
-    These characteristics include:
-    Initialization parameters:
-    - id->int: (optional) id of the shipment fruit belongs to, if applicable.
-    - species->String: species of fruit (apple, or banana).
-    - cultivar->String: cultivated variety of fruit (Granny Smith (apple) or Lakatan (banana)).
-    - shelfLife->int: shelf life of fruit in days.
-    - pricePerUnit->double: price per unit of fruit.
-     */
     private int shipmentID = -1;
     private String species;
     private String cultivar;

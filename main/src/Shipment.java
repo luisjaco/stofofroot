@@ -1,19 +1,20 @@
 import java.util.Date;
 import java.util.ArrayList;
-public class Shipment {
-    /*
-    The Shipment class contains information for each shipment a store may make.
-    The information for the Shipment class is as follows:
-    Initialization parameters:
-    - id->int: the id of the shipment.
-    - deliveryDate->Date: the date the shipment was delivered.
-    - fruit->Fruit: the Fruit class of the fruit involved in the shipment.
-    - quantity->int: the quantity of fruit in the shipment.
 
-    Variables:
-    - shipmentInventory->ArrayList(<Fruit>): an ArrayList of Fruit with the corresponding shipment id.
-    - totalPrice->double: total price of shipment; fruit.pricePerUnit * quantity.
-     */
+/**
+ * <p>The Shipment class contains information for each shipment a store may make.</p>
+ * <p></p>
+ * Initialization parameters:
+ * <p>int id - the id of the shipment.</p>
+ * <p>Date deliveryDate - the date the shipment was delivered.</p>
+ * <p>Fruit fruit - the Fruit class of the fruit involved in the shipment.</p>
+ * <p>int quantity - the quantity of fruit in the shipment.</p>
+ * <p></p>
+ * Variables:
+ * <p>ArrayList(Fruit) shipmentInventory - an ArrayList of Fruit with the corresponding shipment id.</p>
+ * <p>double totalPrice - total price of shipment; fruit.pricePerUnit * quantity.</p>
+ */
+public class Shipment {
     private int id;
     private Fruit fruit;
     private int quantity;
@@ -30,8 +31,11 @@ public class Shipment {
         this.shipmentInventory = new ArrayList<>();
         createShipmentInventory();
     }
+
+    /**
+     * Populates shipmentInventory with fruits which have a corresponding id.
+     */
     private void createShipmentInventory(){
-        //Populates shipmentInventory with fruits which have a corresponding id.
         String species = this.fruit.getSpecies();
         String cultivar = this.fruit.getCultivar();
         int shelfLife = this.fruit.getShelfLife();
@@ -42,22 +46,16 @@ public class Shipment {
         }
     }
     public boolean compareByTotalPrice(Shipment shipment){
-        //Returns true is this.totalPrice is greater than the parameter's totalPrice.
         return (this.totalPrice > shipment.totalPrice);
     }
 
     public boolean afterShipment(Shipment shipment){
-        //Returns true if this.deliveryDate is after the parameters deliveryDate.
         return (this.deliveryDate.after(shipment.deliveryDate));
     }
-
     public boolean beforeShipment(Shipment shipment){
-        //Returns true if this.deliveryDate is after the parameters deliveryDate.
         return (this.deliveryDate.before(shipment.deliveryDate));
     }
-
     public boolean isExpired(Date date){
-        // Returns true if this.deliveryDate is equal to or after the date parameter.
         return (this.deliveryDate.equals(date)) || (this.deliveryDate.after(date));
     }
     public String shortString(){
@@ -87,7 +85,7 @@ public class Shipment {
         return deliveryDate;
     }
 
-    public void setdeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

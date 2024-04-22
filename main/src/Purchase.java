@@ -1,11 +1,13 @@
+/**
+ * <p>The Purchase class contains information about a purchase a customer has made.</p>
+ * <p></p>
+ * <p>Initialization parameters:</p>
+ * <p>int id - the unique id of a purchase.</p>
+ * <p>Fruit fruit - the type of fruit which was bought.</p>
+ * <p>int quantity - the amount of fruit which were purchased.</p>
+ * <p>double price - the amount the customer paid for the purchase.</p>
+ */
 public class Purchase {
-    /*The Purchase class contains information about a purchase a customer has made. The class contains the following information:
-    Initialization parameters:
-    - id->int: the unique id of a purchase.
-    - fruit->Fruit: the type of fruit which was bought.
-    - quantity->int: the amount of fruit which were purchased.
-    - price->double: the amount the customer paid for the purchase.
-     */
     private int id;
     private Fruit fruit;
     private int quantity;

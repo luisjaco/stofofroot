@@ -38,25 +38,26 @@ public class Menu {
                 input:""");
         int choice = collectInt(0, 2);
 
-        switch (choice){
-            case 2:
+        switch (choice) {
+            case 2 -> {
                 System.out.print("""
-                Please enter the name for the store...
-                
-                input:""");
+                        Please enter the name for the store...
+                                        
+                        input:""");
                 String storeName = collectString();
                 this.store = new Store(storeName);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 System.out.println("Loading demo store...");
                 initializeDemo();
                 System.out.println("Loaded demo! Includes: [21] fruit options, [5] shipments, and [4] purchases.");
-                break;
-            case 0:
+            }
+            case 0 -> {
                 exit();
                 return;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         // In every case but 0, we will perform run()
         run();
@@ -226,6 +227,7 @@ public class Menu {
      */
     private boolean mainMenu(){
         System.out.print("""
+                ~Main~
                 Please select one of the following actions:
                 [2] View
                 [1] Add
@@ -233,18 +235,15 @@ public class Menu {
                 
                 input:""");
         int choice = collectInt(0, 2);
-        switch (choice){
-            case 2:
-                viewMenu();
-                break;
-            case 1:
-                addMenu();
-                break;
-            case 0:
+        switch (choice) {
+            case 2 -> viewMenu();
+            case 1 -> addMenu();
+            case 0 -> {
                 // Returns false to end the run() loop.
                 return false;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         return true;
     }
@@ -316,15 +315,11 @@ public class Menu {
     }
     private void sortFruitOptions(int choice){
         ArrayList<Fruit> sortedFruit = new ArrayList<>();
-        switch (choice){
-            case 3:
-                sortedFruit = this.store.fruitOptionsSortedByPrice();
-                break;
-            case 2:
-                sortedFruit = this.store.fruitOptionsSortedByShelfLife();
-                break;
-            default:
-                break;
+        switch (choice) {
+            case 3 -> sortedFruit = this.store.fruitOptionsSortedByPrice();
+            case 2 -> sortedFruit = this.store.fruitOptionsSortedByShelfLife();
+            default -> {
+            }
         }
         System.out.println("Printing sorted fruit options...");
         for (Fruit fruit : sortedFruit){
@@ -337,7 +332,7 @@ public class Menu {
         System.out.print("Fruit cultivar: (Ex: Granny Smith)\n\ninput:");
         String cultivar = collectString();
         Fruit testFruit = new Fruit(species, cultivar, 0, 0.0);
-        System.out.println("Searching for %s %s...".formatted(cultivar, species));
+        System.out.printf("Searching for %s %s...\n", cultivar, species);
         if (this.store.containsFruitOption(testFruit)){
             System.out.println("Fruit is available at this store!");
         }
@@ -370,7 +365,7 @@ public class Menu {
     }
     private void oldestShipmentMenu(){
         Shipment shipment = this.store.peekOldestShipment();
-        System.out.print("""
+        System.out.printf("""
                 ~Oldest shipment~
                 
                 %s
@@ -379,12 +374,12 @@ public class Menu {
                 [1] Yes
                 [0] No
                 
-                input:""".formatted(shipment));
+                input:""", shipment);
         int choice = collectInt(0,1);
         switch (choice){
             case 1:
                 int removed = this.store.discardOldestShipment();
-                System.out.println("Discarded oldest shipment! Removed [%d] %s's.".formatted(removed, shipment.getFruit().getFruitTitle()));
+                System.out.printf("Discarded oldest shipment! Removed [%d] %s's.\n", removed, shipment.getFruit().getFruitTitle());
                 break;
             case 0:
                 break;
@@ -443,25 +438,47 @@ public class Menu {
                 break;
         }
     }
-    private Fruit findFruit(){
-        while (true){
-            System.out.print("Fruit species: (Ex: Apple)\n\ninput:");
+    private Fruit findFruit() {
+        while (true) {
+            System.out.print("Fruit species (Ex: Apple):\n\ninput:");
             String species = collectString();
-            System.out.print("Fruit cultivar: (Ex: Granny Smith)\n\ninput:");
+            System.out.print("Fruit cultivar (Ex: Granny Smith):\n\ninput:");
             String cultivar = collectString();
-            System.out.println("Searching for %s %s...".formatted(cultivar, species));
+            System.out.printf("Searching for %s %s...\n", cultivar, species);
             Fruit fruit = this.store.findFruitOption(species, cultivar);
 
-            if (fruit == null){
-                System.out.print("""
-                ERROR: Fruit not found. Try again?
-                Please select one of the following actions:
-                [1] yes
-                [0] no
-                
-                input:""");
+            if (fruit != null) {
+                System.out.printf("""
+                        Fruit found.
+                        ~
+                        %s
+                        ~
+                        Use fruit?
+                        Please select one of the following actions:
+                        [1] Yes
+                        [0] No
+                                        
+                        input:""", fruit);
                 int choice = collectInt(0, 1);
-                switch (choice){
+                switch (choice) {
+                    case 1:
+                        return fruit;
+                    case 0:
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                System.out.print("""
+                        ERROR: Fruit not found.
+                        Try again?
+                        Please select one of the following actions:
+                        [1] Yes
+                        [0] No
+                                        
+                        input:""");
+                int choice = collectInt(0, 1);
+                switch (choice) {
                     case 1:
                         break;
                     case 0:
@@ -470,24 +487,21 @@ public class Menu {
                         break;
                 }
             }
-            else {
-                return fruit;
-            }
         }
     }
     private void addFruitOption(){
         System.out.println("~Add fruit option~");
-        System.out.print("Fruit species (Ex: Apple)\n\ninput:");
+        System.out.print("Fruit species (Ex: Apple):\n\ninput:");
         String species = collectString();
-        System.out.print("Fruit cultivar (Ex: Granny Smith)\n\ninput:");
+        System.out.print("Fruit cultivar (Ex: Granny Smith):\n\ninput:");
         String cultivar = collectString();
-        System.out.print("Fruit shelf life (in # days)\n\ninput:");
+        System.out.print("Fruit shelf life (in # days):\n\ninput:");
         int shelfLife = collectInt(1, Integer.MAX_VALUE);
-        System.out.print("Fruit price per unit\n\ninput:");
+        System.out.print("Fruit price per unit:\n\ninput:");
         double pricePerUnit = collectDouble(0, Double.MAX_VALUE);
 
         Fruit fruit = new Fruit(species, cultivar, shelfLife, pricePerUnit);
-        System.out.print("""
+        System.out.printf("""
                 New fruit created:
                 ~
                 %s
@@ -497,7 +511,7 @@ public class Menu {
                 [1] yes
                 [0] no
                 
-                input:""".formatted(fruit));
+                input:""", fruit);
         int choice = collectInt(0, 1);
         switch (choice){
             case 1:
@@ -509,35 +523,92 @@ public class Menu {
             default:
                 break;
         }
-
     }
 
     private void addShipment(){
         Fruit fruit;
         int quantity;
         Date deliveryDate;
-        System.out.println("~Add shipment~");
-        System.out.println("First, search for the fruit to be shipped.");
+        System.out.println("~Add shipment~\nFirst, search for the fruit to be shipped.");
         fruit = findFruit();
         if (fruit != null){
-            System.out.println("Fruit found.");
-            System.out.print("Quantity of %s\n\ninput:".formatted(fruit.getFruitTitle()));
+            System.out.printf("Quantity of %s:\n\ninput:", fruit.getFruitTitle());
             quantity = collectInt(1, Integer.MAX_VALUE);
-            System.out.print("Year of shipment\n\ninput:");
+            System.out.print("Year of shipment:\n\ninput:");
             int year = collectInt(0, Integer.MAX_VALUE);
-            System.out.print("Month of shipment (Ex: 1-January, 12-December)\n\ninput:");
+            System.out.print("Month of shipment (Ex: 1-January, 12-December):\n\ninput:");
             int month = collectInt(1, 12) - 1; //The Date object uses a 0-indexed month parameter.
-            System.out.print("Day of shipment\n\ninput:");
+            System.out.print("Day of shipment:\n\ninput:");
             int day = collectInt(1, 31);
             deliveryDate = new Date(year, month, day);
 
             Shipment shipment = new Shipment(this.store.getShipmentID(), fruit, quantity, deliveryDate);
 
-            //TODO
+            System.out.printf("""
+                New shipment created:
+                ~
+                %s
+                ~
+                Add to shipments?
+                Please select one of the following actions:
+                [1] yes
+                [0] no
+                
+                input:""", shipment);
+            int choice = collectInt(0, 1);
+            switch (choice){
+                case 1:
+                    this.store.addShipment(shipment);
+                    System.out.println("Successfully added shipment!");
+                    break;
+                case 0:
+                    break;
+                default:
+                    break;
+            }
         }
+        //Else, does nothing. fruit == null means user did not want to keep searching for fruit.
     }
 
     private void addPurchase(){
+        System.out.println("~Add purchase~\nFirst, search for the fruit to be purchased.");
+        Fruit fruit = findFruit();
 
+        if (fruit != null){
+            System.out.printf("Quantity of %s:\n\ninput:", fruit.getFruitTitle());
+            int quantity = collectInt(1, Integer.MAX_VALUE);
+            System.out.println("Price of purchase:\n\ninput:");
+            double price = collectDouble(0, Double.MAX_VALUE);
+
+            Purchase purchase = new Purchase(this.store.getPurchaseID(), fruit, quantity, price);
+
+            System.out.printf("""
+                New purchase created:
+                ~
+                %s
+                ~
+                Add to purchases?
+                Please select one of the following actions:
+                [1] yes
+                [0] no
+                
+                input:""",purchase);
+            int choice = collectInt(0, 1);
+            switch (choice){
+                case 1:
+                    if (this.store.addPurchase(purchase)){
+                        System.out.println("Successfully added purchase!");
+                    }
+                    else{
+                        System.out.println("ERROR: Insufficient number of fruits in inventory for this purchase, purchase not made.");
+                    }
+                    break;
+                case 0:
+                    break;
+                default:
+                    break;
+            }
+        }
+        // Else, does nothing. User did not find fruit.
     }
 }

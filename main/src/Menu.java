@@ -327,7 +327,7 @@ public class Menu {
         }
     }
     private void searchForFruit(){
-        System.out.print("Fruit species: (Ex: Apple)\n\ninput:");
+        System.out.print("~Search for fruit~\nFruit species: (Ex: Apple)\n\ninput:");
         String species = collectString();
         System.out.print("Fruit cultivar: (Ex: Granny Smith)\n\ninput:");
         String cultivar = collectString();
@@ -577,7 +577,7 @@ public class Menu {
         if (fruit != null){
             System.out.printf("Quantity of %s:\n\ninput:", fruit.getFruitTitle());
             int quantity = collectInt(1, Integer.MAX_VALUE);
-            System.out.println("Price of purchase:\n\ninput:");
+            System.out.print("Price of purchase:\n\ninput:");
             double price = collectDouble(0, Double.MAX_VALUE);
 
             Purchase purchase = new Purchase(this.store.getPurchaseID(), fruit, quantity, price);

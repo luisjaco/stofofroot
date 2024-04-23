@@ -305,7 +305,7 @@ public class Store {
         for( Fruit key: this.inventory.keySet()){
             String fruitTitle = key.getFruitTitle();
             int size = this.inventory.get(key).size();
-            System.out.printf("%s: [%d]", fruitTitle, size);
+            System.out.printf("%s: [%d]\n", fruitTitle, size);
         }
     }
 

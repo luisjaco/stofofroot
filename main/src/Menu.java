@@ -3,7 +3,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
- * The Menu class is user to handle all the user experience. Contains methods for each menu.
+ * The Menu class is used to handle the user experience. Contains methods for each menu.
  */
 public class Menu {
     private Scanner input;
